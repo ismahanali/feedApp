@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.bptn.feedApp.jpa.User;
 import com.bptn.feedApp.repository.UserRepository;
 
+
+import java.sql.Timestamp;
+import java.time.Instant;
+
+
 @Service
 public class UserService {
 	@Autowired
@@ -24,6 +29,21 @@ public class UserService {
 	
 	public void createUser(User user) {
 		this.userRepository.save(user);
+	}
+	public User signup(User user){
+		
+		user.setUsername(user.getUsername().toLowerCase());
+		user.setEmailId(user.getEmailId().toLowerCase());
+		
+		user.setEmailVerified(false);
+		
+		user.setCreatedOn(Timestamp.from(Instant.now()));
+		
+		this.userRepository.save(user);
+		
+		return user;
+		
+		
 	}
 	
 }
