@@ -61,7 +61,7 @@ spring:
 # Email Settings
   mail:
     username: ismahanfeedapp@gmail.com
-    password: otpfqndocwlezcx
+    password: otpf dqnd ocwl ezcx
     host: smtp.gmail.com
     port: 587
     protocol: smtp
