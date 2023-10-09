@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 
 @Service
 public class EmailService {
+
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${spring.mail.username}")
