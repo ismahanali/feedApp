@@ -1,20 +1,20 @@
 package com.bptn.feedApp.service;
 
 import java.sql.Timestamp;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bptn.feedApp.exception.domain.EmailExistException;
+import com.bptn.feedApp.exception.domain.UserNotFoundException;
+import com.bptn.feedApp.exception.domain.UsernameExistException;
 import com.bptn.feedApp.jpa.User;
 import com.bptn.feedApp.repository.UserRepository;
-
-import com.bptn.feedApp.exception.domain.EmailExistException;
-import com.bptn.feedApp.exception.domain.UsernameExistException;
 
 @Service
 public class UserService {
@@ -68,6 +68,18 @@ public class UserService {
 			throw new EmailExistException(String.format("Email already exists, %s", u.getEmailId()));
 		});
 
+	}
+
+	public void verifyEmail() {
+
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		User user = this.userRepository.findByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
+
+		user.setEmailVerified(true);
+
+		this.userRepository.save(user);
 	}
 
 }
