@@ -53,6 +53,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RestControllerAdvice
+
 public class ExceptionHandling implements ErrorController {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static final String TOKEN_DECODE_ERROR = "Token Decode Error";
@@ -151,7 +152,7 @@ public class ExceptionHandling implements ErrorController {
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<HttpResponse> methodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
 		HttpMethod supportedMethod = Objects.requireNonNull(ex.getSupportedHttpMethods()).iterator().next();
-		return this.createHttpResponse(METHOD_NOT_ALLOWED, String.format(METHOD_IS_NOT_ALLOWED, supportedMethod));
+		return this.createHttpResponse(METHOD_NOT_ALLOWED, METHOD_IS_NOT_ALLOWED.formatted(supportedMethod));
 	}
 
 	@ExceptionHandler(Exception.class)
