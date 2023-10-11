@@ -21,7 +21,7 @@ import com.bptn.feedApp.jpa.User;
 import com.bptn.feedApp.service.UserService;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.HttpHeaders;
-
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 @CrossOrigin(exposedHeaders = "Authorization")
@@ -102,6 +102,14 @@ public class UserController {
 		logger.debug("User Authenticated, username: {}", user.getUsername());
 			
 		return new ResponseEntity<>(user, jwtHeader, OK);
+	}
+	
+	@PostMapping("/reset")
+	public void passwordReset(@RequestBody JsonNode json) {
+
+		logger.debug("Resetting Password, password: {}", json.get("password").asText());
+
+		this.userService.resetPassword(json.get("password").asText());
 	}
 	
 	
