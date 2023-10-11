@@ -73,6 +73,13 @@ public class UserController {
 		return this.userService.signup(user);
 	}
 	
+	@GetMapping("/reset/{emailId}")
+	public void sendResetPasswordEmail(@PathVariable String emailId) {
+			
+			logger.debug("Sending Reset Password Email, emailId: {}", emailId);
+			
+			this.userService.sendResetPasswordEmail(emailId);
+	}
 	@GetMapping("/verify/email")
 	public void verifyEmail() {
 			
