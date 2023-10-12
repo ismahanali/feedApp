@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.bptn.feedApp.jpa.Feed;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import com.bptn.feedApp.domain.PageResponse;
 
 @CrossOrigin
 @RestController
@@ -35,6 +35,13 @@ public class FeedController {
 		logger.debug("Getting Feed, feedId: {}", feedId);
 			
 		return this.feedService.getFeedById(feedId);	
+	}
+	@GetMapping("/user/{pageNum}/{pageSize}")
+	public PageResponse<Feed> getUserFeeds(@PathVariable int pageNum, @PathVariable int pageSize) {
+			
+		logger.debug("Getting User Feeds List, pageNum: {}, pageSize: {}", pageNum, pageSize);
+			
+		return this.feedService.getUserFeeds(pageNum, pageSize);	
 	}
 	
 }
