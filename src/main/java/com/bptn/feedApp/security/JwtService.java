@@ -34,12 +34,11 @@ public class JwtService {
 				.verify(token);
 	}
 
-	//how the feedApp gets user data it uses below method
+	// how the feedApp gets user data it uses below method
 	public String getSubject(String token) {
 
 		return JWT.require(HMAC512(this.provider.getJwtSecret())).withIssuer(this.provider.getJwtIssuer()).build()
 				.verify(token).getSubject();
 	}
-	
 
 }

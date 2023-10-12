@@ -1,6 +1,5 @@
 package com.bptn.feedApp.config;
 
-
 import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -63,15 +62,14 @@ public class WebSecurityConfig {
 	@Bean
 	@ConditionalOnMissingBean(SecurityFilterChain.class)
 	SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
-			
-			http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			  .authorizeHttpRequests((requests) -> requests.requestMatchers(this.getMatchers(mvc)).permitAll()
-	                                                      .anyRequest().authenticated())
-	          .exceptionHandling((handler)-> handler.authenticationEntryPoint(this.customAuthEntryPoint))		
-	          .addFilterBefore(this.jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-	          .cors(withDefaults())
-	          .csrf((csrf) -> csrf.disable());
-			
-			return http.build();
+
+		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests((requests) -> requests.requestMatchers(this.getMatchers(mvc)).permitAll()
+						.anyRequest().authenticated())
+				.exceptionHandling((handler) -> handler.authenticationEntryPoint(this.customAuthEntryPoint))
+				.addFilterBefore(this.jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+				.cors(withDefaults()).csrf((csrf) -> csrf.disable());
+
+		return http.build();
 	}
 }

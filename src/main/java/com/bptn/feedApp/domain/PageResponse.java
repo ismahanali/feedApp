@@ -19,7 +19,7 @@ public class PageResponse<T> {
 			this.content = paged.getContent();
 		}
 	}
-	
+
 	public int getPageNum() {
 		return pageNum;
 	}

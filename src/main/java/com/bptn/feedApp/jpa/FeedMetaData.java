@@ -13,35 +13,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-
 @Entity
-@Table(name="\"FeedMetaData\"")
+@Table(name = "\"FeedMetaData\"")
 public class FeedMetaData implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"feedMetaDataId\"")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "\"feedMetaDataId\"")
 	private Integer feedMetaDataId;
-	
+
 	private String comment;
-	
-	@Column(name="\"createdOn\"")
+
+	@Column(name = "\"createdOn\"")
 	private Timestamp createdOn;
-	
-	@Column(name="\"isLike\"")
+
+	@Column(name = "\"isLike\"")
 	private Boolean isLike;
-	
+
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name="\"feedId\"")
+	@JoinColumn(name = "\"feedId\"")
 	private Feed feed;
-	
+
 	@ManyToOne
-	@JoinColumn(name="\"actionUserId\"")
+	@JoinColumn(name = "\"actionUserId\"")
 	private User user;
-	
+
 	public FeedMetaData() {
 	}
 
@@ -92,7 +91,5 @@ public class FeedMetaData implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-    
+
 }

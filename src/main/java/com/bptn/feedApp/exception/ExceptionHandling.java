@@ -43,13 +43,11 @@ import java.util.Objects;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import jakarta.persistence.NoResultException;
 
 import org.springframework.web.bind.annotation.GetMapping;
-
 
 @RestController
 @RestControllerAdvice
@@ -160,16 +158,16 @@ public class ExceptionHandling implements ErrorController {
 		logger.error(exception.getMessage(), exception);
 		return this.createHttpResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG);
 	}
-	
+
 	@ExceptionHandler(NoResultException.class)
 	public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
-	    logger.error(exception.getMessage());
-	    return this.createHttpResponse(NOT_FOUND, exception.getMessage());
+		logger.error(exception.getMessage());
+		return this.createHttpResponse(NOT_FOUND, exception.getMessage());
 	}
-	
+
 	@GetMapping(ERROR_PATH)
 	public ResponseEntity<HttpResponse> notFound404() throws Exception {
-	    return this.createHttpResponse(NOT_FOUND, NO_MAPPING_EXIST_URL);
+		return this.createHttpResponse(NOT_FOUND, NO_MAPPING_EXIST_URL);
 	}
 
 }

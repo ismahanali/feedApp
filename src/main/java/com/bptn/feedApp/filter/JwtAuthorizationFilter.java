@@ -29,7 +29,6 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	@Autowired
@@ -44,35 +43,35 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+			throws ServletException, IOException {
 
-	    	logger.debug("Running Jwt Filter, URL: {}, Method: {}", req.getRequestURL(), req.getMethod());
-	    	   	    			
-	    	try {    				
-	    		
-	    		/* Requests with method = OPTIONS are not validated. */
-	    		if ( !req.getMethod().equalsIgnoreCase(OPTIONS.name()) ) {
-	    			
-	    			String header = req.getHeader(AUTHORIZATION); /* Get the Header from the request.*/
-	    			
-	    			/* Check if the JWT is present in the Header and starts with the JWT Prefix. */
-	    			if ( this.isJwtPrefixValid(header) ){ 
-	    				/* Validate the JWT and get the username from it. */
-	    				String username = this.jwtService.getSubject(header.substring(7)); 
-	    				
-	    				/* Set the username in the Spring Security context for later use. */
-	    		SecurityContextHolder.getContext().setAuthentication(this.getAuthentication(username, req));			
-	    				logger.debug("User Authorized: {}", username);
-	    			}
-	    		}
-	    		
-	    		filterChain.doFilter(req, res);
-	    	} 
-	    	catch(JWTVerificationException ex) {
-	    		logger.debug("Token cannot be verified, Reason: {}", ex.getMessage());
-	    				
-	    		this.resolver.resolveException(req, res, null, ex);
-	    	}       	
+		logger.debug("Running Jwt Filter, URL: {}, Method: {}", req.getRequestURL(), req.getMethod());
+
+		try {
+
+			/* Requests with method = OPTIONS are not validated. */
+			if (!req.getMethod().equalsIgnoreCase(OPTIONS.name())) {
+
+				String header = req.getHeader(AUTHORIZATION); /* Get the Header from the request. */
+
+				/* Check if the JWT is present in the Header and starts with the JWT Prefix. */
+				if (this.isJwtPrefixValid(header)) {
+					/* Validate the JWT and get the username from it. */
+					String username = this.jwtService.getSubject(header.substring(7));
+
+					/* Set the username in the Spring Security context for later use. */
+					SecurityContextHolder.getContext().setAuthentication(this.getAuthentication(username, req));
+					logger.debug("User Authorized: {}", username);
+				}
+			}
+
+			filterChain.doFilter(req, res);
+		} catch (JWTVerificationException ex) {
+			logger.debug("Token cannot be verified, Reason: {}", ex.getMessage());
+
+			this.resolver.resolveException(req, res, null, ex);
+		}
 	}
 
 	private Authentication getAuthentication(String username, HttpServletRequest req) {
@@ -81,13 +80,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 		userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
 		return userPasswordAuthToken;
 	}
-	
+
 	private boolean isJwtPrefixValid(String header) {
-    	
+
 		logger.debug("Authorization Header: {}", Optional.ofNullable(header).orElse("Not Present"));
-		    	
-		return Optional.ofNullable(header)
-		    			     .filter(h -> h.startsWith(this.provider.getJwtPrefix()))
-		    			     .isPresent();
+
+		return Optional.ofNullable(header).filter(h -> h.startsWith(this.provider.getJwtPrefix())).isPresent();
 	}
 }

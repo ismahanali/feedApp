@@ -15,28 +15,28 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
-@Table(name="\"Profile\"")
+@Table(name = "\"Profile\"")
 public class Profile implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="\"profileId\"")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "\"profileId\"")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private Integer profileId;
-	
+
 	private String bio;
 	private String city;
 	private String country;
 	private String headline;
 	private String picture;
-	
+
 	@OneToOne
 	@JsonIgnore
-	@JoinColumn(name="\"userId\"")
+	@JoinColumn(name = "\"userId\"")
 	private User user;
-	
+
 	// created a default constructor
 	public Profile() {
 	}

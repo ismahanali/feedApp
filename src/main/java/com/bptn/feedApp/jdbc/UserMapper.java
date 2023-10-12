@@ -27,7 +27,7 @@ public class UserMapper implements RowMapper<UserBean> {
 
 		/* Return the populated UserBean object */
 		return user;
-	
+
 	}
 
 }

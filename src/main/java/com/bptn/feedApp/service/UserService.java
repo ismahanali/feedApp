@@ -192,21 +192,22 @@ public class UserService {
 
 		return this.userRepository.save(currentUser);
 	}
+
 	public User updateUser(User user) {
-		
+
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		/* Validates the new email if provided */
-		this.userRepository.findByEmailId(user.getEmailId())
-	                            .filter(u->!u.getUsername().equals(username))
-	                            .ifPresent(u -> {throw new EmailExistException(String.format("Email already exists, %s", u.getEmailId()));});
-		    
-		/* Get and Update User */	
-		return this.userRepository.findByUsername(username)
-					            .map(currentUser -> this.updateUser(user, currentUser))
-					            .orElseThrow(()-> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
+		this.userRepository.findByEmailId(user.getEmailId()).filter(u -> !u.getUsername().equals(username))
+				.ifPresent(u -> {
+					throw new EmailExistException(String.format("Email already exists, %s", u.getEmailId()));
+				});
+
+		/* Get and Update User */
+		return this.userRepository.findByUsername(username).map(currentUser -> this.updateUser(user, currentUser))
+				.orElseThrow(() -> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
 	}
-	
+
 	private User updateUserProfile(Profile profile, User user) {
 
 		Profile currentProfile = user.getProfile();
@@ -218,26 +219,27 @@ public class UserService {
 			this.updateValue(profile::getCity, currentProfile::setCity);
 			this.updateValue(profile::getCountry, currentProfile::setCountry);
 			this.updateValue(profile::getPicture, currentProfile::setPicture);
-		} 
-		// profile object not present, set the profile object as what was oringally passed
-		//then profile will be set to the paramater
+		}
+		// profile object not present, set the profile object as what was oringally
+		// passed
+		// then profile will be set to the paramater
 		// no new object created, no updated information. only updates if present
-	    else {
+		else {
 			user.setProfile(profile);
 			profile.setUser(user);
 		}
 		//
 		return this.userRepository.save(user);
 	}
+
 	public User updateUserProfile(Profile profile) {
-		//we passed a token 
+		// we passed a token
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		/* Get and Update User */
-		//checking to see user is still there
-		return this.userRepository.findByUsername(username)
-		              .map(user -> this.updateUserProfile(profile, user))
-	                  .orElseThrow(()-> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
+		// checking to see user is still there
+		return this.userRepository.findByUsername(username).map(user -> this.updateUserProfile(profile, user))
+				.orElseThrow(() -> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
 	}
 
 }

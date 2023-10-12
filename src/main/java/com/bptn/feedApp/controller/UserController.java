@@ -72,38 +72,39 @@ public class UserController {
 		logger.debug("Signing up, username: {}", user.getUsername());
 		return this.userService.signup(user);
 	}
-	
+
 	@GetMapping("/reset/{emailId}")
 	public void sendResetPasswordEmail(@PathVariable String emailId) {
-			
-			logger.debug("Sending Reset Password Email, emailId: {}", emailId);
-			
-			this.userService.sendResetPasswordEmail(emailId);
+
+		logger.debug("Sending Reset Password Email, emailId: {}", emailId);
+
+		this.userService.sendResetPasswordEmail(emailId);
 	}
+
 	@GetMapping("/verify/email")
 	public void verifyEmail() {
-			
+
 		logger.debug("Verifying Email");
-			
+
 		this.userService.verifyEmail();
 	}
-	
+
 	@PostMapping("/login")
 	public ResponseEntity<User> login(@RequestBody User user) {
-		
+
 		logger.debug("Authenticating, username: {}, password: {}", user.getUsername(), user.getPassword());
-			
+
 		/* Spring Security Authentication. */
 		user = this.userService.authenticate(user);
 
 		/* Generate JWT and HTTP Header */
 		HttpHeaders jwtHeader = this.userService.generateJwtHeader(user.getUsername());
-					
+
 		logger.debug("User Authenticated, username: {}", user.getUsername());
-			
+
 		return new ResponseEntity<>(user, jwtHeader, OK);
 	}
-	
+
 	@PostMapping("/reset")
 	public void passwordReset(@RequestBody JsonNode json) {
 
@@ -111,30 +112,29 @@ public class UserController {
 
 		this.userService.resetPassword(json.get("password").asText());
 	}
-	
+
 	@GetMapping("/get")
 	public User getUser() {
-			
+
 		logger.debug("Getting User Data");
-			
+
 		return this.userService.getUser();
 	}
-	
+
 	@PostMapping("/update")
 	public User updateUser(@RequestBody User user) {
-			
+
 		logger.debug("Updating User Data");
-			
+
 		return this.userService.updateUser(user);
 	}
-	
+
 	@PostMapping("/update/profile")
 	public User updateUserProfile(@RequestBody Profile profile) {
-			
+
 		logger.debug("Updating User Profile Data, Profile: {}", profile.toString());
-			
+
 		return this.userService.updateUserProfile(profile);
 	}
-	
-	
+
 }

@@ -93,6 +93,5 @@ public class ResourceProvider {
 	public String[] getH2ServerParams() {
 		return h2ServerParams;
 	}
-	
-	
+
 }
