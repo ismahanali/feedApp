@@ -1,6 +1,7 @@
 package com.bptn.feedApp.service;
 
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import java.sql.Timestamp;
@@ -12,6 +13,7 @@ import com.bptn.feedApp.jpa.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bptn.feedApp.repository.FeedRepository;
 import com.bptn.feedApp.repository.UserRepository;
+import com.bptn.feedApp.exception.domain.FeedNotFoundException;
 
 @Service
 public class FeedService {
@@ -33,5 +35,11 @@ public class FeedService {
 		feed.setCreatedOn(Timestamp.from(Instant.now()));
 
 		return this.feedRepository.save(feed);
+	}
+	
+	public Feed getFeedById(int feedId) {
+
+		return this.feedRepository.findById(feedId)
+		.orElseThrow(() -> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
 	}
 }
