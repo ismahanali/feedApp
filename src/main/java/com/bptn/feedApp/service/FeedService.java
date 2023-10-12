@@ -58,4 +58,14 @@ public class FeedService {
 		return this.feedRepository.findById(feedId)
 		.orElseThrow(() -> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
 	}
+	public PageResponse<Feed> getOtherUsersFeeds(int pageNum, int pageSize) {
+
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();		
+		User user = this.userRepository.findByUsername(username)
+		             .orElseThrow(()-> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
+					
+		Page<Feed> paged = this.feedRepository.findByUserNot(user, PageRequest.of(pageNum, pageSize, Sort.by("feedId").descending()));
+			
+		return new PageResponse<Feed>(paged);
+	}
 }
