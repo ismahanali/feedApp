@@ -22,7 +22,7 @@ import com.bptn.feedApp.service.UserService;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.HttpHeaders;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import com.bptn.feedApp.jpa.Profile;
 
 @CrossOrigin(exposedHeaders = "Authorization")
 @RestController
@@ -126,6 +126,14 @@ public class UserController {
 		logger.debug("Updating User Data");
 			
 		return this.userService.updateUser(user);
+	}
+	
+	@PostMapping("/update/profile")
+	public User updateUserProfile(@RequestBody Profile profile) {
+			
+		logger.debug("Updating User Profile Data, Profile: {}", profile.toString());
+			
+		return this.userService.updateUserProfile(profile);
 	}
 	
 	

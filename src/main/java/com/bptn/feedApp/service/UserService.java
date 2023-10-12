@@ -210,27 +210,31 @@ public class UserService {
 	private User updateUserProfile(Profile profile, User user) {
 
 		Profile currentProfile = user.getProfile();
-
+//checking if profile is present current profile is optional meaning it can have null values
 		if (Optional.ofNullable(currentProfile).isPresent()) {
-
+//two arguments, (getter and setter)
 			this.updateValue(profile::getHeadline, currentProfile::setHeadline);
 			this.updateValue(profile::getBio, currentProfile::setBio);
 			this.updateValue(profile::getCity, currentProfile::setCity);
 			this.updateValue(profile::getCountry, currentProfile::setCountry);
 			this.updateValue(profile::getPicture, currentProfile::setPicture);
 		} 
+		// profile object not present, set the profile object as what was oringally passed
+		//then profile will be set to the paramater
+		// no new object created, no updated information. only updates if present
 	    else {
 			user.setProfile(profile);
 			profile.setUser(user);
 		}
-
+		//
 		return this.userRepository.save(user);
 	}
 	public User updateUserProfile(Profile profile) {
-		
+		//we passed a token 
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		/* Get and Update User */	
+		/* Get and Update User */
+		//checking to see user is still there
 		return this.userRepository.findByUsername(username)
 		              .map(user -> this.updateUserProfile(profile, user))
 	                  .orElseThrow(()-> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
