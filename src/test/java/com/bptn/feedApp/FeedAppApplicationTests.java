@@ -7,10 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.h2.tools.Server;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+
 @SpringBootTest
 @ActiveProfiles("test")
 class FeedApplicationTests {
-
+	
 	@MockBean
 	Server server;
 	
