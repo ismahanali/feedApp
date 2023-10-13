@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.bptn.feedApp.domain.PageResponse;
 import com.bptn.feedApp.jpa.FeedMetaData;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @CrossOrigin
 @RestController
@@ -62,6 +62,14 @@ public class FeedController {
 		logger.debug("Creating FeedMetaData, feedId: {}", feedId);
 			
 		return this.feedService.createFeedMetaData(feedId, meta);
+	}
+	
+	@DeleteMapping("/{feedId}")
+	public void deleteFeed(@PathVariable int feedId) {
+			
+		logger.debug("Deleting Feed, feedId: {}", feedId);
+			
+		this.feedService.deleteFeed(feedId);	
 	}
 
 }
