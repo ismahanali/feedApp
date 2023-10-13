@@ -23,6 +23,7 @@ import java.util.Optional;
 import com.bptn.feedApp.exception.domain.LikeExistException;
 import com.bptn.feedApp.jpa.FeedMetaData;
 import com.bptn.feedApp.exception.domain.FeedNotUserException;
+
 @Service
 public class FeedService {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -78,55 +79,59 @@ public class FeedService {
 
 		return new PageResponse<Feed>(paged);
 	}
+
 	public FeedMetaData createFeedMetaData(int feedId, FeedMetaData meta) {
-		
+
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-			
+
 		User user = this.userRepository.findByUsername(username)
-					             .orElseThrow(()-> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
-			
+				.orElseThrow(() -> new UserNotFoundException(String.format("Username doesn't exist, %s", username)));
+
 		Feed feed = this.feedRepository.findById(feedId)
-					             .orElseThrow(()-> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
+				.orElseThrow(() -> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
 
 		FeedMetaData newMeta = new FeedMetaData();
-			
+
 		newMeta.setIsLike(false);
 		newMeta.setUser(user);
 		newMeta.setFeed(feed);
 		newMeta.setCreatedOn(Timestamp.from(Instant.now()));
-			
-	    if (Optional.ofNullable(meta.getIsLike()).isPresent()) {
-	        	
-	        newMeta.setIsLike( meta.getIsLike() );
-	            
-	        if (meta.getIsLike()) {
-	        		
-	            feed.getFeedMetaData().stream()
-	                      .filter(m -> m.getUser().getUsername().equals(username))
-	      	              .filter(m -> m.getIsLike().equals(true)).findAny()
-	      	              .ifPresent(m -> {throw new LikeExistException(String.format("Feed already liked, feedId: %d, username: %s", feedId, username));});
-	            	
-	            newMeta.setComment("");
-	        }
-	    } 
-	        
-	    if (!newMeta.getIsLike()) {
-	        newMeta.setComment(meta.getComment());
-	    }
-	        
+
+		if (Optional.ofNullable(meta.getIsLike()).isPresent()) {
+
+			newMeta.setIsLike(meta.getIsLike());
+
+			if (meta.getIsLike()) {
+
+				feed.getFeedMetaData().stream().filter(m -> m.getUser().getUsername().equals(username))
+						.filter(m -> m.getIsLike().equals(true)).findAny().ifPresent(m -> {
+							throw new LikeExistException(
+									String.format("Feed already liked, feedId: %d, username: %s", feedId, username));
+						});
+
+				newMeta.setComment("");
+			}
+		}
+
+		if (!newMeta.getIsLike()) {
+			newMeta.setComment(meta.getComment());
+		}
+
 		return this.feedMetaDataRepository.save(newMeta);
 	}
+
 	public void deleteFeed(int feedId) {
-		
+
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		Feed feed = this.feedRepository.findById(feedId)			
-		             .orElseThrow(()-> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
+
+		Feed feed = this.feedRepository.findById(feedId)
+				.orElseThrow(() -> new FeedNotFoundException(String.format("Feed doesn't exist, %d", feedId)));
 
 		Optional.of(feed).filter(f -> f.getUser().getUsername().equals(username))
-			         .orElseThrow(()-> new FeedNotUserException(String.format("Feed doesn't belong to current User, feedId: %d, username: %s", feedId, username)));
-			
+				.orElseThrow(() -> new FeedNotUserException(String
+						.format("Feed doesn't belong to current User, feedId: %d, username: %s", feedId, username)));
+
 		this.feedRepository.delete(feed);
 	}
-	
+
 }
