@@ -22,7 +22,20 @@ spring:
     time-zone: America/Toronto
     date-format: "yyyy-MM-dd HH:mm:ss" 
     
-    
+# Email Settings
+  mail:
+    username: ismahanfeedapp@gmail.com
+    password: otpf dqnd ocwl ezcx
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true  
+                
 # Common Database Settings executing a query using hibernate
   sql:
     init:
@@ -57,20 +70,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      
-# Email Settings
-  mail:
-    username: ismahanfeedapp@gmail.com
-    password: otpf dqnd ocwl ezcx
-    host: smtp.gmail.com
-    port: 587
-    protocol: smtp
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true   
+       
 ---      
 # Prod Profile
 server:
